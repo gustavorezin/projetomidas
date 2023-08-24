@@ -15,7 +15,7 @@
 - ./assets/splash.png
 - configurar app.json
 
-### FONTE DO PROJETO
+### Fonte do projeto
 
 - https://docs.expo.dev/develop/user-interface/fonts/#use-a-google-font;
 - npx expo install expo-font @expo-google-fonts/roboto;
