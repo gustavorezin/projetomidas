@@ -1,8 +1,8 @@
 # MANUAL DO PROJETO
 
-**npx create-expo-app -t expo-template-blank-typescript**
+_**npx create-expo-app -t expo-template-blank-typescript**_
 
-quando fazer instalação com expo, parar o app
+_quando fazer instalação com expo, parar o app_
 
 ### Babel
 
@@ -17,7 +17,7 @@ quando fazer instalação com expo, parar o app
 
 ### Fonte do projeto
 
-[Expo](https://docs.expo.dev/develop/user-interface/fonts/#use-a-google-font);
+- [Fontes expo](https://docs.expo.dev/develop/user-interface/fonts/#use-a-google-font);
 
 1. npx expo install expo-font @expo-google-fonts/roboto;
 2. importar no App.tsx;
