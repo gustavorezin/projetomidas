@@ -1,8 +1,7 @@
 # MANUAL DO PROJETO
 
-_**npx create-expo-app -t expo-template-blank-typescript**_
-
-_quando fazer instalação com expo, parar o app_
+- _**npx create-expo-app -t expo-template-blank-typescript**_
+- _quando fazer instalação com expo, parar o app_
 
 ### Babel
 
