@@ -2,6 +2,7 @@ import { ThemeProvider } from "styled-components/native";
 import { StatusBar } from "react-native";
 
 import "react-native-gesture-handler";
+import {SafeAreaProvider} from 'react-native-safe-area-context'
 import theme from "./src/theme";
 import {
   useFonts,
@@ -21,12 +22,14 @@ export default function App() {
 
   return (
     <ThemeProvider theme={theme}>
-      <StatusBar
-        barStyle="light-content"
-        backgroundColor="transparent"
-        translucent
-      />
-      <Routes />
+      <SafeAreaProvider>
+        <StatusBar
+          barStyle="light-content"
+          backgroundColor="transparent"
+          translucent
+        />
+        <Routes />
+      </SafeAreaProvider>
     </ThemeProvider>
   );
 }

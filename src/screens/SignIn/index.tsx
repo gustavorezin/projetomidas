@@ -22,18 +22,19 @@ export function SignIn() {
         <Container>
           <Text>Acesse sua conta</Text>
           <Input
+            label="E-mail"
             placeholder="E-mail"
             keyboardType="email-address"
             autoCapitalize="none"
             variant="light"
           />
-          <Input placeholder="Senha" secureTextEntry variant="light" />
+          <Input label="Senha" placeholder="Senha" secureTextEntry variant="light" />
           <Button title="Acessar" />
           <TouchableOpacity style={{ marginTop: 10 }} onPress={handleHome}>
             <Paragraph>Esqueci minha senha</Paragraph>
           </TouchableOpacity>
         </Container>
-        <View style={{ marginTop: 20 }}>
+        <View style={{ marginTop: 20, }}>
           <Paragraph>Ainda não tem acesso?</Paragraph>
           <Button title="Entre em contato" variant="transparent" />
         </View>

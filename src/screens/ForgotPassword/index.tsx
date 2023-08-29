@@ -4,8 +4,11 @@ import { Header } from "@components/Header";
 
 export function ForgotPassword() {
   return (
-    <Container>
-      <Header />
-    </Container>
+    <>
+      <Header title="Esqueceu a senha?" />
+      <Container>
+        
+      </Container>
+    </>
   );
 }
