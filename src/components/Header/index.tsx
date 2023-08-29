@@ -7,28 +7,26 @@ import { useNavigation } from "@react-navigation/native";
 
 type Props = {
   title: string;
-}
+};
 
-export function Header({ title } : Props) {
+export function Header({ title }: Props) {
   const { COLORS } = useTheme();
 
-  const insets = useSafeAreaInsets()
-  const paddingTop = insets.top + 42;
+  const insets = useSafeAreaInsets();
+  const paddingTop = insets.top + 24;
 
   const navigation = useNavigation();
 
   function handleGoBack() {
-    navigation.goBack()
+    navigation.goBack();
   }
 
   return (
-    <Container style={{paddingTop}}>
+    <Container style={{ paddingTop }}>
       <TouchableOpacity onPress={handleGoBack}>
         <ArrowLeft size={24} weight="bold" color={COLORS.BRAND_LIGHT} />
       </TouchableOpacity>
-      <Title>
-        {title}
-      </Title>
+      <Title>{title}</Title>
     </Container>
   );
 }

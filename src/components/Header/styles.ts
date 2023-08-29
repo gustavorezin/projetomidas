@@ -2,10 +2,10 @@ import styled from "styled-components/native";
 
 export const Container = styled.View`
   width: 100%;
-  padding: 0 32px 24px;
+  padding: 0 24px 24px;
   flex-direction: row;
   justify-content: space-between;
-
+  align-items: center;
   background-color: ${({ theme }) => theme.COLORS.GRAY_700};
 `;
 

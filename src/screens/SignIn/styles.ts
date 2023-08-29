@@ -23,7 +23,7 @@ export const Text = styled.Text`
 export const Paragraph = styled.Text`
   text-align: center;
   margin-bottom: 10px;
-  color: ${({ theme }) => theme.COLORS.WHITE};
+  color: ${({ theme }) => theme.COLORS.GRAY_200};
   font-size: ${({ theme }) => theme.FONT_SIZE.SM}px;
   font-family: ${({ theme }) => theme.FONT_FAMILY.REGULAR};
 `;
