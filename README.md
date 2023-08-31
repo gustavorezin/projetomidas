@@ -43,3 +43,16 @@
 ## Phosphor icons
 
 - npm install --save phosphor-react-native
+
+## React Hook Form
+
+1. npm i react-hook-form
+2. npm i @hookform/resolvers yup
+
+## Axios
+
+- npm i axios
+
+## Toast
+
+- npm install react-hot-toast
