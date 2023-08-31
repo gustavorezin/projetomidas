@@ -55,4 +55,10 @@
 
 ## Toast
 
-- npm install react-hot-toast
+- [Toast Message](https://www.npmjs.com/package/react-native-toast-message)
+- npm install --save react-native-toast-message
+
+## Async Storage
+
+- [Async Storage Expo](https://docs.expo.dev/versions/latest/sdk/async-storage/)
+- npx expo install @react-native-async-storage/async-storage

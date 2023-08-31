@@ -2,7 +2,7 @@ import { ThemeProvider } from "styled-components/native";
 import { StatusBar } from "react-native";
 
 import "react-native-gesture-handler";
-import {SafeAreaProvider} from 'react-native-safe-area-context'
+import { SafeAreaProvider } from "react-native-safe-area-context";
 import theme from "./src/theme";
 import {
   useFonts,
@@ -12,6 +12,9 @@ import {
 
 import { Loading } from "@components/Loading";
 import { Routes } from "@routes/index";
+
+import Toast from "react-native-toast-message";
+import { AuthContextProvider } from "@contexts/AuthContext";
 
 export default function App() {
   const [fontsLoaded] = useFonts({ Roboto_400Regular, Roboto_700Bold });
@@ -28,7 +31,10 @@ export default function App() {
           backgroundColor="transparent"
           translucent
         />
-        <Routes />
+        <AuthContextProvider>
+          <Routes />
+        </AuthContextProvider>
+        <Toast />
       </SafeAreaProvider>
     </ThemeProvider>
   );

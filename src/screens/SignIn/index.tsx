@@ -9,12 +9,12 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import * as yup from "yup";
 import LogoImage from "../../assets/logo-nome-cinza.png";
 import { Container, Image, Paragraph, Text } from "./styles";
-import { api } from "@services/api";
 import { AppError } from "@utils/AppError";
-import toast, { Toaster } from "react-hot-toast";
+import Toast from "react-native-toast-message";
+import { useAuth } from "@hooks/useAuth";
+import { useState } from "react";
 
 type FormDataProps = {
-  tenantid?: Number;
   username: string;
   password: string;
 };
@@ -28,6 +28,9 @@ const schema = yup.object({
 });
 
 export function SignIn() {
+  const [isLoading, setIsLoading] = useState(false);
+  const { signIn } = useAuth();
+
   const {
     control,
     handleSubmit,
@@ -40,13 +43,22 @@ export function SignIn() {
 
   const insets = useSafeAreaInsets();
 
-  async function handleSignIn(dataa: FormDataProps) {
-    console.log(dataa);
+  async function handleSignIn({ username, password }: FormDataProps) {
     try {
-      const { data } = await api.post("/auth/login", { dataa });
+      setIsLoading(true);
+      await signIn(username, password);
     } catch (error) {
       const isAppError = error instanceof AppError;
-      alert;
+      const text1 = isAppError
+        ? error.message
+        : "Não foi possível acessar. Tente novamente";
+
+      setIsLoading(false);
+
+      Toast.show({
+        type: "error",
+        text1,
+      });
     }
   }
 
@@ -80,7 +92,11 @@ export function SignIn() {
             variant="light"
             error={errors.password}
           />
-          <Button title="Acessar" onPress={handleSubmit(handleSignIn)} />
+          <Button
+            title="Acessar"
+            onPress={handleSubmit(handleSignIn)}
+            isLoading={isLoading}
+          />
           <TouchableOpacity onPress={handleForgotPassword}>
             <Paragraph>Esqueci minha senha</Paragraph>
           </TouchableOpacity>
