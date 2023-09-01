@@ -1,11 +1,19 @@
 import { ReactNode, createContext, useEffect, useState } from "react";
+
 import { ClienteDTO } from "@dtos/ClienteDTO";
 import { api } from "@services/api";
-import { storageClienteGet, storageClienteSave } from "@storage/storageCliente";
+
+import { storageAuthTokenSave } from "@storage/storageAuthToken";
+import {
+  storageClienteGet,
+  storageClienteRemove,
+  storageClienteSave,
+} from "@storage/storageCliente";
 
 export type AuthContextDataProps = {
   cliente: ClienteDTO;
   signIn: (username: string, password: string) => Promise<void>;
+  signOut: () => Promise<void>;
   isLoadingClienteStorageData: boolean;
 };
 
@@ -22,6 +30,25 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
   const [isLoadingClienteStorageData, setIsLoadingClienteStorageData] =
     useState(true);
 
+  async function storageClienteAndToken(
+    clienteData: ClienteDTO,
+    token: string
+  ) {
+    try {
+      setIsLoadingClienteStorageData(true);
+
+      api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+
+      await storageClienteSave(clienteData);
+      await storageAuthTokenSave(token);
+      setCliente(clienteData);
+    } catch (error) {
+      throw error;
+    } finally {
+      setIsLoadingClienteStorageData(false);
+    }
+  }
+
   async function signIn(username: string, password: string) {
     try {
       const { data } = await api.post("/auth/login", {
@@ -29,13 +56,26 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
         password,
       });
 
-      if (data.cliente) {
-        setCliente(data.cliente);
-        storageClienteSave(data.cliente);
+      console.log(data.token);
+
+      if (data.cliente && data.token) {
+        storageClienteAndToken(data.cliente, data.token);
       }
     } catch (error) {
       console.log("Error from backend:", error);
       throw error;
+    }
+  }
+
+  async function signOut() {
+    try {
+      setIsLoadingClienteStorageData(true);
+      setCliente({} as ClienteDTO);
+      await storageClienteRemove();
+    } catch (error) {
+      throw error;
+    } finally {
+      setIsLoadingClienteStorageData(false);
     }
   }
 
@@ -58,7 +98,7 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
 
   return (
     <AuthContext.Provider
-      value={{ cliente, signIn, isLoadingClienteStorageData }}
+      value={{ cliente, signIn, signOut, isLoadingClienteStorageData }}
     >
       {children}
     </AuthContext.Provider>

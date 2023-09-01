@@ -1,12 +1,18 @@
 import React from "react";
 
 import { Container } from "./styles";
-import { Text } from "react-native";
+import { Text, TouchableOpacity } from "react-native";
+import { useAuth } from "@hooks/useAuth";
 
 export function Home() {
+  const { cliente, signOut } = useAuth();
+
   return (
     <Container>
-      <Text>Home</Text>
+      <Text style={{ color: "white" }}>Home, {cliente.nome}</Text>
+      <TouchableOpacity onPress={signOut}>
+        <Text style={{ color: "red" }}>Sair</Text>
+      </TouchableOpacity>
     </Container>
   );
 }
