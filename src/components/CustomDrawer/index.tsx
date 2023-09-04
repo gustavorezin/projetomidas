@@ -1,60 +1,54 @@
-/* import { Text, TouchableOpacity, View } from "react-native";
-import { Container } from "./styles";
-import { DrawerContentScrollView, DrawerItemList } from "@react-navigation/drawer";
-import { SignOut } from "phosphor-react-native";
-import { useAuth } from "@hooks/useAuth";
-
-export function CustomDrawer(props : any) {
-  const { cliente, signOut } = useAuth();
-  return (
-    <View style={{flex: 1}}>
-      <DrawerContentScrollView
-        contentContainerStyle={{backgroundColor: '#949494'}}  
-      >
-        <View style={{ flex: 1, paddingTop: 10, backgroundColor: '#fff'}}>
-          <DrawerItemList {...props} />
-        </View>
-      </DrawerContentScrollView>
-      <View style={{padding: 20, borderTopWidth: 1, borderTopColor: '#ccc'}}>
-        <TouchableOpacity onPress={signOut} style={{paddingVertical: 15, flexDirection: 'row', alignItems: 'center'}}>
-          <SignOut size={22} />
-          <Text style={{fontSize: 16, marginLeft: 5}}>Sair</Text>
-        </TouchableOpacity>
-      </View>
-    </View>
-  );
-}
- */
-
 import React from "react";
 import { SignOut } from "phosphor-react-native";
 import {
   Container,
   DrawerContentScrollViewContainer,
   BottomSection,
-  SignOutButton,
-  SignOutText,
-} from "./styles"; // Import your styled-components
+  BottomButton,
+  BottomText,
+  ProfileSection,
+  ProfileImage,
+  ProfileGreating,
+  ProfileGreatingText,
+  ProfileGreatingName,
+  ProfileCompany,
+} from "./styles";
 import { useAuth } from "@hooks/useAuth";
-import { DrawerContentScrollView, DrawerItemList } from "@react-navigation/drawer";
+import {
+  DrawerContentScrollView,
+  DrawerItemList,
+} from "@react-navigation/drawer";
+import { useTheme } from "styled-components/native";
+import { View } from "react-native";
 
-export function CustomDrawer(props : any) {
+export function CustomDrawer(props: any) {
+  const { COLORS } = useTheme();
   const { cliente, signOut } = useAuth();
-  
+
   return (
     <Container>
-      <DrawerContentScrollView
-        contentContainerStyle={{ backgroundColor: "#949494" }}
-      >
+      <DrawerContentScrollView>
+        <ProfileSection>
+          <ProfileImage
+            source={{ uri: "https://github.com/gustavorezin.png" }}
+          />
+          <View style={{ marginLeft: 10 }}>
+            <ProfileGreating>
+              <ProfileGreatingText>Olá, </ProfileGreatingText>
+              <ProfileGreatingName>{cliente.nome}</ProfileGreatingName>
+            </ProfileGreating>
+            <ProfileCompany>{cliente.cdpessoaempnome}</ProfileCompany>
+          </View>
+        </ProfileSection>
         <DrawerContentScrollViewContainer>
           <DrawerItemList {...props} />
         </DrawerContentScrollViewContainer>
       </DrawerContentScrollView>
       <BottomSection>
-        <SignOutButton onPress={signOut}>
-          <SignOut size={22} />
-          <SignOutText>Sair</SignOutText>
-        </SignOutButton>
+        <BottomButton onPress={signOut}>
+          <SignOut size={22} color={COLORS.RED} />
+          <BottomText>Sair</BottomText>
+        </BottomButton>
       </BottomSection>
     </Container>
   );

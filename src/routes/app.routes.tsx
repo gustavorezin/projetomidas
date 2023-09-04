@@ -23,35 +23,38 @@ export function AppRoutes() {
   const { COLORS, FONT_FAMILY, FONT_SIZE } = useTheme();
 
   return (
-    <Navigator 
-      drawerContent={props => <CustomDrawer {...props} />}
+    <Navigator
+      drawerContent={(props) => <CustomDrawer {...props} />}
       screenOptions={{
         drawerActiveBackgroundColor: COLORS.BRAND_LIGHT,
         drawerActiveTintColor: COLORS.WHITE,
-        drawerInactiveTintColor: COLORS.GRAY_600,
+        drawerInactiveTintColor: COLORS.GRAY_200,
         drawerLabelStyle: {
-          marginLeft: -25,
+          marginLeft: -20,
           fontFamily: FONT_FAMILY.REGULAR,
-          fontSize: FONT_SIZE.MD
-        }
+          fontSize: FONT_SIZE.MD,
+        },
+        headerShown: false,
       }}
     >
-      <Screen 
-        name="home" 
-        component={Home} 
+      <Screen
+        name="home"
+        component={Home}
         options={{
-          drawerIcon: ({color}) => {
-            return <House size={22} color={color} />
-          }
+          drawerIcon: ({ color }) => {
+            return <House size={22} color={color} />;
+          },
+          drawerLabel: "Home",
         }}
       />
-      <Screen 
-        name="profile" 
-        component={Profile} 
+      <Screen
+        name="profile"
+        component={Profile}
         options={{
-          drawerIcon: ({color}) => {
-            return <User size={22} color={color} />
-          }
+          drawerIcon: ({ color }) => {
+            return <User size={22} color={color} />;
+          },
+          drawerLabel: "Minha conta",
         }}
       />
     </Navigator>

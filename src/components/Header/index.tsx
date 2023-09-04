@@ -1,15 +1,21 @@
 import { TouchableOpacity } from "react-native";
-import { ArrowLeft } from "phosphor-react-native";
+import { ArrowLeft, List } from "phosphor-react-native";
 import { Container, Title } from "./styles";
 import { useTheme } from "styled-components/native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { useNavigation } from "@react-navigation/native";
+import { DrawerActions, useNavigation } from "@react-navigation/native";
 
 type Props = {
   title: string;
+  showBackButton?: boolean;
+  showDrawerButton?: boolean;
 };
 
-export function Header({ title }: Props) {
+export function Header({
+  title,
+  showBackButton = false,
+  showDrawerButton = false,
+}: Props) {
   const { COLORS } = useTheme();
 
   const insets = useSafeAreaInsets();
@@ -23,10 +29,19 @@ export function Header({ title }: Props) {
 
   return (
     <Container style={{ paddingTop }}>
-      <TouchableOpacity onPress={handleGoBack}>
-        <ArrowLeft size={24} weight="bold" color={COLORS.BRAND_LIGHT} />
-      </TouchableOpacity>
+      {showBackButton && (
+        <TouchableOpacity onPress={handleGoBack}>
+          <ArrowLeft size={24} color={COLORS.BRAND_LIGHT} />
+        </TouchableOpacity>
+      )}
       <Title>{title}</Title>
+      {showDrawerButton && (
+        <TouchableOpacity
+          onPress={() => navigation.dispatch(DrawerActions.toggleDrawer())}
+        >
+          <List size={24} color={COLORS.GRAY_100} />
+        </TouchableOpacity>
+      )}
     </Container>
   );
 }

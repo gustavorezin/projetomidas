@@ -14,7 +14,7 @@ export function ForgotPassword() {
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <View style={{ flex: 1 }}>
-        <Header title="Recuperar senha" />
+        <Header title="Recuperar senha" showBackButton />
         <Container>
           <View style={{ flex: 1, justifyContent: "center", gap: 10 }}>
             <Highlight

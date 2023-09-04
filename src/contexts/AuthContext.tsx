@@ -3,7 +3,11 @@ import { ReactNode, createContext, useEffect, useState } from "react";
 import { ClienteDTO } from "@dtos/ClienteDTO";
 import { api } from "@services/api";
 
-import { storageAuthTokenSave } from "@storage/storageAuthToken";
+import {
+  storageAuthTokenGet,
+  storageAuthTokenRemove,
+  storageAuthTokenSave,
+} from "@storage/storageAuthToken";
 import {
   storageClienteGet,
   storageClienteRemove,
@@ -30,23 +34,9 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
   const [isLoadingClienteStorageData, setIsLoadingClienteStorageData] =
     useState(true);
 
-  async function storageClienteAndToken(
-    clienteData: ClienteDTO,
-    token: string
-  ) {
-    try {
-      setIsLoadingClienteStorageData(true);
-
-      api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-
-      await storageClienteSave(clienteData);
-      await storageAuthTokenSave(token);
-      setCliente(clienteData);
-    } catch (error) {
-      throw error;
-    } finally {
-      setIsLoadingClienteStorageData(false);
-    }
+  function clienteAndTokenUpdate(clienteData: ClienteDTO, token: string) {
+    api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+    setCliente(clienteData);
   }
 
   async function signIn(username: string, password: string) {
@@ -59,11 +49,16 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
       console.log(data.token);
 
       if (data.cliente && data.token) {
-        storageClienteAndToken(data.cliente, data.token);
+        setIsLoadingClienteStorageData(true);
+        await storageClienteSave(data.cliente);
+        await storageAuthTokenSave(data.token);
+        clienteAndTokenUpdate(data.cliente, data.token);
       }
     } catch (error) {
       console.log("Error from backend:", error);
       throw error;
+    } finally {
+      setIsLoadingClienteStorageData(false);
     }
   }
 
@@ -72,6 +67,7 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
       setIsLoadingClienteStorageData(true);
       setCliente({} as ClienteDTO);
       await storageClienteRemove();
+      await storageAuthTokenRemove();
     } catch (error) {
       throw error;
     } finally {
@@ -81,9 +77,12 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
 
   async function loadClienteData() {
     try {
+      setIsLoadingClienteStorageData(true);
       const clienteLogged = await storageClienteGet();
-      if (clienteLogged) {
-        setCliente(clienteLogged);
+      const token = await storageAuthTokenGet();
+
+      if (clienteLogged && token) {
+        clienteAndTokenUpdate(clienteLogged, token);
       }
     } catch (error) {
       throw error;
