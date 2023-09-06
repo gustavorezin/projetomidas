@@ -19,7 +19,7 @@ export function Button({
   return (
     <Container
       variant={variant}
-      activeOpacity={0.8}
+      activeOpacity={0.7}
       disabled={isLoading}
       {...rest}
     >

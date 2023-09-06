@@ -62,3 +62,8 @@
 
 - [Async Storage Expo](https://docs.expo.dev/versions/latest/sdk/async-storage/)
 - npx expo install @react-native-async-storage/async-storage
+
+## Bottom sheet
+
+- [Code With Beto](https://codewithbeto.dev/projects/bottomSheetModal)
+- npm i @gorhom/bottom-sheet

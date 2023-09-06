@@ -1,5 +1,5 @@
 import React from "react";
-import { SignOut } from "phosphor-react-native";
+import { SignOut, Question } from "phosphor-react-native";
 import {
   Container,
   DrawerContentScrollViewContainer,
@@ -45,6 +45,10 @@ export function CustomDrawer(props: any) {
         </DrawerContentScrollViewContainer>
       </DrawerContentScrollView>
       <BottomSection>
+        <BottomButton onPress={signOut}>
+          <Question size={22} color="#3498db" />
+          <BottomText>Dúvidas</BottomText>
+        </BottomButton>
         <BottomButton onPress={signOut}>
           <SignOut size={22} color={COLORS.RED} />
           <BottomText>Sair</BottomText>

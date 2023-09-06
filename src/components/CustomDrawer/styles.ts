@@ -53,6 +53,7 @@ export const ProfileCompany = styled.Text`
 
 export const BottomSection = styled.View`
   padding: 20px;
+  gap: 24px;
   border-top-width: 1px;
   border-top-color: ${({ theme }) => theme.COLORS.GRAY_400};
 `;
