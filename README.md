@@ -67,3 +67,8 @@
 
 - [Code With Beto](https://codewithbeto.dev/projects/bottomSheetModal)
 - npm i @gorhom/bottom-sheet
+
+## Dropdown
+
+- [Element Dropdown](https://www.npmjs.com/package/react-native-element-dropdown)
+- npm install react-native-element-dropdown --save

@@ -2,7 +2,7 @@ import { AppError } from "@utils/AppError";
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "http://192.168.15.108:8080/api",
+  baseURL: "http://192.168.15.105:8080/api",
   // baseURL: "http://177.54.58.124:8080/api",
 });
 
