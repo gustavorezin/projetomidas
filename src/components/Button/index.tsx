@@ -7,7 +7,7 @@ type ButtonVariant = "default" | "transparent";
 type Props = TouchableOpacityProps & {
   title: string;
   isLoading?: boolean;
-  variant?: ButtonVariant; // Adicione a propriedade variant
+  variant?: ButtonVariant;
 };
 
 export function Button({

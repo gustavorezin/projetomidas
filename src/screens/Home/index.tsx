@@ -1,36 +1,58 @@
-import { useRef, useCallback, useState } from "react";
+import { useCallback, useRef, useState } from "react";
+import { KeyboardAvoidingView, Platform } from "react-native";
 import { Container, ContainerBottomSheet } from "./styles";
 
-import { Header } from "@components/Header";
-import { View } from "react-native";
-import { CardButton } from "@components/CardButton";
-import {
-  BottomSheetModalProvider,
-  BottomSheetModal,
-  BottomSheetBackdrop,
-} from "@gorhom/bottom-sheet";
-import { useTheme } from "styled-components/native";
-import { Highlight } from "@components/Highlight";
-import { Input } from "@components/Input";
-import { AppError } from "@utils/AppError";
-import Toast from "react-native-toast-message";
-import { api } from "@services/api";
-import { CdPessoaDTO } from "@dtos/CdPessoaDTO";
-import { Dropdown, DropdownProps } from "@components/Dropdown";
 import { Button } from "@components/Button";
+import { CardButton } from "@components/CardButton";
+import { CustomSelect } from "@components/CustomSearch";
+import { Header } from "@components/Header";
+import { Highlight } from "@components/Highlight";
+import { CdPessoaDTO } from "@dtos/CdPessoaDTO";
+import {
+  BottomSheetBackdrop,
+  BottomSheetModal,
+  BottomSheetModalProvider,
+} from "@gorhom/bottom-sheet";
+import { api } from "@services/api";
+import { AppError } from "@utils/AppError";
+import { View } from "react-native";
+import Toast from "react-native-toast-message";
+import { useTheme } from "styled-components/native";
 
 interface DropdownItem {
   value: string;
   label: string;
 }
 
+interface SelectItem {
+  value: string;
+  label: string;
+}
+
+const data = [
+  { value: "1", label: "Item 1" },
+  { value: "2", label: "Item 2" },
+  { value: "3", label: "Item 3" },
+  { value: "4", label: "Item 4" },
+  { value: "5", label: "Item 5" },
+  { value: "6", label: "Item 6" },
+  { value: "7", label: "Item 7" },
+  { value: "8", label: "Item 8" },
+  { value: "9", label: "Item 9" },
+  { value: "10", label: "Item 10" },
+  { value: "11", label: "Item 11" },
+  { value: "12", label: "Item 12" },
+  // Adicione mais itens conforme necessário
+];
+
 export function Home() {
   const [isLoading, setIsLoading] = useState(false);
   const [dataDropdownEmps, setDataDropdownEmps] = useState<DropdownItem[]>([]);
-  const { COLORS } = useTheme();
+  const [selectedEmp, setSelectedEmp] = useState<SelectItem | null>(null);
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
+  const { COLORS } = useTheme();
 
-  const snapPoints = ["25%", "50%", "75%"];
+  const snapPoints = ["50%", "75%"];
 
   async function handleSaleModal() {
     await fetchListCdPessoaEmp();
@@ -50,6 +72,7 @@ export function Home() {
 
   async function fetchListCdPessoaEmp() {
     try {
+      setIsLoading(true);
       const response = await api.get("/private/cdpessoa/pessoa/localativos");
       const dropdownData = response.data.map((e: CdPessoaDTO) => ({
         value: e.id.toString(),
@@ -70,32 +93,45 @@ export function Home() {
     }
   }
 
+  const handleSelect = (item: SelectItem | null) => {
+    setSelectedEmp(item);
+  };
+
   return (
     <BottomSheetModalProvider>
       <Container>
         <Header title="Home" showDrawerButton />
-        <View style={{ padding: 20 }}>
+        <View style={{ padding: 20, flex: 1 }}>
           <CardButton title="Nova venda" onPress={handleSaleModal} />
         </View>
-        <BottomSheetModal
-          ref={bottomSheetModalRef}
-          index={1}
-          snapPoints={snapPoints}
-          backgroundStyle={{
-            borderRadius: 24,
-            backgroundColor: COLORS.GRAY_700,
-          }}
-          handleIndicatorStyle={{ backgroundColor: COLORS.BRAND_LIGHT }}
-          backdropComponent={renderBackdrop}
+        <KeyboardAvoidingView
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
+          style={{ flex: 1 }}
         >
-          <ContainerBottomSheet>
-            <Highlight title="Nova venda" subtitle="" />
-            <View style={{ flex: 1 }}>
-              <Dropdown data={dataDropdownEmps} />
-            </View>
-            <Button title="Iniciar" />
-          </ContainerBottomSheet>
-        </BottomSheetModal>
+          <BottomSheetModal
+            ref={bottomSheetModalRef}
+            index={1}
+            snapPoints={snapPoints}
+            backgroundStyle={{
+              borderRadius: 24,
+              backgroundColor: COLORS.GRAY_700,
+            }}
+            handleIndicatorStyle={{ backgroundColor: COLORS.BRAND_LIGHT }}
+            backdropComponent={renderBackdrop}
+          >
+            <ContainerBottomSheet>
+              <Highlight title="Nova venda" subtitle="" />
+              <View style={{ flex: 1 }}>
+                <CustomSelect
+                  data={dataDropdownEmps}
+                  onSelect={handleSelect}
+                  showSearch
+                />
+              </View>
+              <Button title="Iniciar" />
+            </ContainerBottomSheet>
+          </BottomSheetModal>
+        </KeyboardAvoidingView>
       </Container>
     </BottomSheetModalProvider>
   );

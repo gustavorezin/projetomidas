@@ -19,11 +19,25 @@ import {
   DrawerItemList,
 } from "@react-navigation/drawer";
 import { useTheme } from "styled-components/native";
-import { View } from "react-native";
+import { Linking, View } from "react-native";
 
 export function CustomDrawer(props: any) {
   const { COLORS } = useTheme();
   const { cliente, signOut } = useAuth();
+
+  const handleOpenLink = async (url: string) => {
+    try {
+      const supported = await Linking.canOpenURL(url);
+
+      if (supported) {
+        await Linking.openURL(url);
+      } else {
+        console.error("Não é possível abrir o URL");
+      }
+    } catch (error) {
+      console.error("Erro ao tentar abrir o URL");
+    }
+  };
 
   return (
     <Container>
@@ -45,7 +59,13 @@ export function CustomDrawer(props: any) {
         </DrawerContentScrollViewContainer>
       </DrawerContentScrollView>
       <BottomSection>
-        <BottomButton onPress={signOut}>
+        <BottomButton
+          onPress={() =>
+            handleOpenLink(
+              "https://midassi.notion.site/Duvidas-Midas-4928ba0d195b4241b444624ef5dacca6?pvs=4"
+            )
+          }
+        >
           <Question size={22} color="#3498db" />
           <BottomText>Dúvidas</BottomText>
         </BottomButton>
