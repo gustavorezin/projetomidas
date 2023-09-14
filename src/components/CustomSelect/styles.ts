@@ -20,7 +20,7 @@ export const ButtonSelect = styled.TouchableOpacity`
 export const ButtonSelectText = styled.Text`
   flex: 1;
   color: ${({ theme }) => theme.COLORS.WHITE};
-  font-size: ${({ theme }) => theme.FONT_SIZE.SM}px;
+  font-size: ${({ theme }) => theme.FONT_SIZE.MD}px;
   font-family: ${({ theme }) => theme.FONT_FAMILY.REGULAR};
 `;
 
