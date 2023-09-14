@@ -6,6 +6,7 @@ import {
   ButtonSelect,
   ButtonSelectText,
   Container,
+  ContainerItems,
   InputTextSearch,
   ItemList,
 } from "./styles";
@@ -41,6 +42,17 @@ export function CustomSelect({
     item.label.toLowerCase().includes(search.toLowerCase())
   );
 
+  // Defina uma altura máxima para o ContainerItems
+  const maxHeight = 200; // Altura máxima desejada
+  const itemHeight = 48; // Altura de cada item
+  const numberOfItems = filteredData.length;
+
+  // Calcule a altura do ContainerItems com base na quantidade de itens
+  const containerHeight =
+    numberOfItems > 3
+      ? maxHeight
+      : numberOfItems * itemHeight + (showSearch ? 46 : 0); // 46 é a altura do InputTextSearch
+
   return (
     <Container>
       <ButtonSelect
@@ -57,16 +69,7 @@ export function CustomSelect({
         )}
       </ButtonSelect>
       {isSearchClicked && (
-        <View
-          style={{
-            width: "100%",
-            borderRadius: 6,
-            marginTop: 10,
-            gap: 10,
-            backgroundColor: "white",
-            elevation: 6,
-          }}
-        >
+        <ContainerItems style={{ elevation: 6, height: containerHeight }}>
           {showSearch && (
             <InputTextSearch
               placeholder="Buscando por..."
@@ -82,9 +85,10 @@ export function CustomSelect({
               </ItemList>
             )}
             keyExtractor={(item) => item.value}
+            showsVerticalScrollIndicator={false}
             contentContainerStyle={[{ paddingBottom: 10 }]}
           />
-        </View>
+        </ContainerItems>
       )}
     </Container>
   );

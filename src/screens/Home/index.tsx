@@ -63,7 +63,7 @@ export function Home() {
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
   const { COLORS } = useTheme();
 
-  const snapPoints = ["50%", "75%"];
+  const snapPoints = ["50%", "80%"];
 
   async function handleSaleModal() {
     // await fetchListCdPessoaEmp();
@@ -117,7 +117,7 @@ export function Home() {
           <CustomSelect data={data} onSelect={handleSelect} showSearch />
           <CardButton title="Nova venda" onPress={handleSaleModal} />
         </View>
-        <View style={{ flex: 1 }}>
+        <View>
           <BottomSheetModal
             ref={bottomSheetModalRef}
             index={1}
@@ -132,7 +132,8 @@ export function Home() {
             <ContainerBottomSheet>
               <Highlight title="Nova venda" subtitle="" />
               <CustomSelect data={data} onSelect={handleSelect} showSearch />
-              {/* <Button title="Iniciar" /> */}
+              <CardButton title="Nova venda" onPress={handleSaleModal} />
+              <Button title="Iniciar" />
             </ContainerBottomSheet>
           </BottomSheetModal>
         </View>
