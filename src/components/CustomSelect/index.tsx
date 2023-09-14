@@ -10,6 +10,7 @@ import {
   InputTextSearch,
   ItemList,
 } from "./styles";
+import { BottomSheetFlatList } from "@gorhom/bottom-sheet";
 
 interface CustomSelectProps {
   data: SelectItem[];
@@ -42,16 +43,13 @@ export function CustomSelect({
     item.label.toLowerCase().includes(search.toLowerCase())
   );
 
-  // Defina uma altura máxima para o ContainerItems
-  const maxHeight = 200; // Altura máxima desejada
-  const itemHeight = 48; // Altura de cada item
+  const maxHeight = 200;
+  const itemHeight = 48;
   const numberOfItems = filteredData.length;
-
-  // Calcule a altura do ContainerItems com base na quantidade de itens
   const containerHeight =
     numberOfItems > 3
       ? maxHeight
-      : numberOfItems * itemHeight + (showSearch ? 46 : 0); // 46 é a altura do InputTextSearch
+      : numberOfItems * itemHeight + (showSearch ? 46 : 0);
 
   return (
     <Container>
@@ -77,7 +75,7 @@ export function CustomSelect({
               onChangeText={(text) => setSearch(text)}
             />
           )}
-          <FlatList
+          <BottomSheetFlatList
             data={filteredData}
             renderItem={({ item }) => (
               <ItemList onPress={() => handleSelectItem(item)}>
@@ -86,7 +84,7 @@ export function CustomSelect({
             )}
             keyExtractor={(item) => item.value}
             showsVerticalScrollIndicator={false}
-            contentContainerStyle={[{ paddingBottom: 10 }]}
+            contentContainerStyle={[{ paddingBottom: 20 }]}
           />
         </ContainerItems>
       )}

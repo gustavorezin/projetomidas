@@ -1,5 +1,5 @@
-import { useCallback, useRef, useState } from "react";
-import { KeyboardAvoidingView, Platform } from "react-native";
+import { useCallback, useMemo, useRef, useState } from "react";
+import { StyleSheet, Text, ScrollView } from "react-native";
 import { Container, ContainerBottomSheet } from "./styles";
 
 import { Button } from "@components/Button";
@@ -8,10 +8,12 @@ import { CustomSelect } from "@components/CustomSelect";
 import { Header } from "@components/Header";
 import { Highlight } from "@components/Highlight";
 import { CdPessoaDTO } from "@dtos/CdPessoaDTO";
-import {
+import BottomSheet, {
   BottomSheetBackdrop,
+  BottomSheetFlatList,
   BottomSheetModal,
   BottomSheetModalProvider,
+
 } from "@gorhom/bottom-sheet";
 import { api } from "@services/api";
 import { AppError } from "@utils/AppError";
@@ -19,11 +21,7 @@ import { View } from "react-native";
 import Toast from "react-native-toast-message";
 import { useTheme } from "styled-components/native";
 import InputDate from "@components/InputDate";
-
-interface DropdownItem {
-  value: string;
-  label: string;
-}
+import { TouchableWithoutFeedback } from "react-native-gesture-handler";
 
 interface SelectItem {
   value: string;
@@ -59,28 +57,32 @@ const data = [
 
 export function Home() {
   const [isLoading, setIsLoading] = useState(false);
-  const [dataDropdownEmps, setDataDropdownEmps] = useState<DropdownItem[]>([]);
+  const [dataDropdownEmps, setDataDropdownEmps] = useState<SelectItem[]>([]);
   const [selectedEmp, setSelectedEmp] = useState<SelectItem | null>(null);
-  const bottomSheetModalRef = useRef<BottomSheetModal>(null);
+  const sheetRef = useRef<BottomSheet>(null);
   const { COLORS } = useTheme();
 
-  const snapPoints = ["50%", "80%"];
+  const snapPoints = useMemo(() => ["25%", "50%", "90%"], []);
 
-  async function handleSaleModal() {
-    // await fetchListCdPessoaEmp();
-    bottomSheetModalRef.current?.present();
-  }
+  const handleSnapPress = useCallback((index: number) => {
+    sheetRef.current?.snapToIndex(index);
+  }, []);
 
   const renderBackdrop = useCallback(
     (props: any) => (
       <BottomSheetBackdrop
-        disappearsOnIndex={0}
-        appearsOnIndex={1}
+        disappearsOnIndex={-1}
+        appearsOnIndex={0}
         {...props}
       />
     ),
     []
   );
+
+  async function handleSaleModal() {
+    // await fetchListCdPessoaEmp();
+    handleSnapPress
+  }
 
   async function fetchListCdPessoaEmp() {
     try {
@@ -89,7 +91,7 @@ export function Home() {
       const dropdownData = response.data.map((e: CdPessoaDTO) => ({
         value: e.id.toString(),
         label: e.nome,
-      })) as DropdownItem[];
+      })) as SelectItem[];
       setDataDropdownEmps(dropdownData);
     } catch (error) {
       const isAppError = error instanceof AppError;
@@ -114,31 +116,26 @@ export function Home() {
       <Container>
         <Header title="Home" showDrawerButton />
         <View style={{ padding: 20, flex: 1 }}>
-          <CardButton title="Nova venda" onPress={handleSaleModal} />
+          <CardButton title="Nova venda"  onPress={() => handleSnapPress(2)} />
+        </View>
+        <BottomSheet
+          ref={sheetRef}
+          snapPoints={snapPoints}
+          backgroundStyle={{
+            borderRadius: 24,
+            backgroundColor: COLORS.GRAY_700,
+          }}
+          handleIndicatorStyle={{ backgroundColor: COLORS.BRAND_LIGHT }}
+          backdropComponent={renderBackdrop}
+        >
+          <ContainerBottomSheet>
+
+          <View style={{flex: 1, maxHeight: 200, gap: 10}}>
+            <Highlight title="Nova venda" />
           <CustomSelect data={data} onSelect={handleSelect} showSearch />
-        </View>
-        <View>
-          <BottomSheetModal
-            ref={bottomSheetModalRef}
-            index={1}
-            snapPoints={snapPoints}
-            backgroundStyle={{
-              borderRadius: 24,
-              backgroundColor: COLORS.GRAY_700,
-            }}
-            handleIndicatorStyle={{ backgroundColor: COLORS.BRAND_LIGHT }}
-            backdropComponent={renderBackdrop}
-          >
-            <ContainerBottomSheet>
-              <View style={{ gap: 10 }}>
-                <Highlight title="Nova venda" />
-                <CustomSelect data={data} onSelect={handleSelect} />
-                <InputDate />
-              </View>
-              <Button title="Iniciar" />
-            </ContainerBottomSheet>
-          </BottomSheetModal>
-        </View>
+          </View>
+          </ContainerBottomSheet>
+        </BottomSheet>
       </Container>
     </BottomSheetModalProvider>
   );
