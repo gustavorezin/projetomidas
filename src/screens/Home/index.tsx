@@ -18,6 +18,7 @@ import { AppError } from "@utils/AppError";
 import { View } from "react-native";
 import Toast from "react-native-toast-message";
 import { useTheme } from "styled-components/native";
+import InputDate from "@components/InputDate";
 
 interface DropdownItem {
   value: string;
@@ -115,7 +116,6 @@ export function Home() {
         <View style={{ padding: 20, flex: 1 }}>
           <CardButton title="Nova venda" onPress={handleSaleModal} />
           <CustomSelect data={data} onSelect={handleSelect} showSearch />
-          <CardButton title="Nova venda" onPress={handleSaleModal} />
         </View>
         <View>
           <BottomSheetModal
@@ -130,9 +130,11 @@ export function Home() {
             backdropComponent={renderBackdrop}
           >
             <ContainerBottomSheet>
-              <Highlight title="Nova venda" subtitle="" />
-              <CustomSelect data={data} onSelect={handleSelect} showSearch />
-              <CardButton title="Nova venda" onPress={handleSaleModal} />
+              <View style={{ gap: 10 }}>
+                <Highlight title="Nova venda" />
+                <CustomSelect data={data} onSelect={handleSelect} />
+                <InputDate />
+              </View>
               <Button title="Iniciar" />
             </ContainerBottomSheet>
           </BottomSheetModal>

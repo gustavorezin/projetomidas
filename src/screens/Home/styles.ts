@@ -5,5 +5,7 @@ export const Container = styled.View`
 `;
 
 export const ContainerBottomSheet = styled.View`
+  flex: 1;
+  justify-content: space-between;
   padding: 0 24px 24px;
 `;

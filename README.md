@@ -72,3 +72,13 @@
 
 - [Element Dropdown](https://www.npmjs.com/package/react-native-element-dropdown)
 - npm install react-native-element-dropdown --save
+
+## Datetime picker
+
+- [Datetime Picker](https://www.npmjs.com/package/react-native-modal-datetime-picker?activeTab=readme)
+- npx expo install react-native-modal-datetime-picker @react-native-community/datetimepicker
+
+## Mask input
+
+- [Mask Input](https://www.npmjs.com/package/react-native-mask-input)
+- npm install react-native-mask-input
