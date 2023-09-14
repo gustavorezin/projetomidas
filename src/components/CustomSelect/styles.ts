@@ -23,3 +23,18 @@ export const ButtonSelectText = styled.Text`
   font-size: ${({ theme }) => theme.FONT_SIZE.SM}px;
   font-family: ${({ theme }) => theme.FONT_FAMILY.REGULAR};
 `;
+
+export const InputTextSearch = styled.TextInput`
+  margin: 10px 10px 0;
+  padding: 0 10px;
+  height: 36px;
+  border-width: 0.5px;
+  border-color: ${({ theme }) => theme.COLORS.GRAY_200};
+  border-radius: 6px;
+`;
+
+export const ItemList = styled.TouchableOpacity`
+  padding: 0 10px;
+  height: 48px;
+  justify-content: center;
+`;

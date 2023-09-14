@@ -4,7 +4,7 @@ import { Container, ContainerBottomSheet } from "./styles";
 
 import { Button } from "@components/Button";
 import { CardButton } from "@components/CardButton";
-import { CustomSelect } from "@components/CustomSearch";
+import { CustomSelect } from "@components/CustomSelect";
 import { Header } from "@components/Header";
 import { Highlight } from "@components/Highlight";
 import { CdPessoaDTO } from "@dtos/CdPessoaDTO";
@@ -42,6 +42,17 @@ const data = [
   { value: "10", label: "Item 10" },
   { value: "11", label: "Item 11" },
   { value: "12", label: "Item 12" },
+  { value: "13", label: "Item 2" },
+  { value: "14", label: "Item 3" },
+  { value: "15", label: "Item 4" },
+  { value: "16", label: "Item 5" },
+  { value: "17", label: "Item 6" },
+  { value: "18", label: "Item 7" },
+  { value: "19", label: "Item 8" },
+  { value: "20", label: "Item 9" },
+  { value: "21", label: "Item 10" },
+  { value: "22", label: "Item 11" },
+  { value: "23", label: "Item 12" },
   // Adicione mais itens conforme necessário
 ];
 
@@ -55,7 +66,7 @@ export function Home() {
   const snapPoints = ["50%", "75%"];
 
   async function handleSaleModal() {
-    await fetchListCdPessoaEmp();
+    // await fetchListCdPessoaEmp();
     bottomSheetModalRef.current?.present();
   }
 
@@ -103,11 +114,10 @@ export function Home() {
         <Header title="Home" showDrawerButton />
         <View style={{ padding: 20, flex: 1 }}>
           <CardButton title="Nova venda" onPress={handleSaleModal} />
+          <CustomSelect data={data} onSelect={handleSelect} showSearch />
+          <CardButton title="Nova venda" onPress={handleSaleModal} />
         </View>
-        <KeyboardAvoidingView
-          behavior={Platform.OS === "ios" ? "padding" : "height"}
-          style={{ flex: 1 }}
-        >
+        <View style={{ flex: 1 }}>
           <BottomSheetModal
             ref={bottomSheetModalRef}
             index={1}
@@ -121,17 +131,11 @@ export function Home() {
           >
             <ContainerBottomSheet>
               <Highlight title="Nova venda" subtitle="" />
-              <View style={{ flex: 1 }}>
-                <CustomSelect
-                  data={dataDropdownEmps}
-                  onSelect={handleSelect}
-                  showSearch
-                />
-              </View>
-              <Button title="Iniciar" />
+              <CustomSelect data={data} onSelect={handleSelect} showSearch />
+              {/* <Button title="Iniciar" /> */}
             </ContainerBottomSheet>
           </BottomSheetModal>
-        </KeyboardAvoidingView>
+        </View>
       </Container>
     </BottomSheetModalProvider>
   );

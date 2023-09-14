@@ -22,7 +22,8 @@ export function Routes() {
   return (
     <View style={{ flex: 1, backgroundColor: COLORS.GRAY_800 }}>
       <NavigationContainer theme={theme}>
-        {cliente.id ? <AppRoutes /> : <AuthRoutes />}
+        {/* {cliente.id ? <AppRoutes /> : <AuthRoutes />} */}
+        <AppRoutes />
       </NavigationContainer>
     </View>
   );

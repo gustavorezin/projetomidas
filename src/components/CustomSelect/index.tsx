@@ -1,14 +1,14 @@
 import { CaretDown, CaretUp } from "phosphor-react-native";
 import React, { useState } from "react";
-import {
-  FlatList,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { FlatList, Text, View } from "react-native";
 import { useTheme } from "styled-components/native";
-import { ButtonSelect, ButtonSelectText, Container } from "./styles";
+import {
+  ButtonSelect,
+  ButtonSelectText,
+  Container,
+  InputTextSearch,
+  ItemList,
+} from "./styles";
 
 interface CustomSelectProps {
   data: SelectItem[];
@@ -68,18 +68,8 @@ export function CustomSelect({
           }}
         >
           {showSearch && (
-            <TextInput
-              placeholder="Search..."
-              style={{
-                width: "90%",
-                height: 54,
-                borderWidth: 0.5,
-                borderColor: "#8e8e8e",
-                borderRadius: 6,
-                alignSelf: "center",
-                marginTop: 10,
-                paddingHorizontal: 10,
-              }}
+            <InputTextSearch
+              placeholder="Buscando por..."
               value={search}
               onChangeText={(text) => setSearch(text)}
             />
@@ -87,26 +77,12 @@ export function CustomSelect({
           <FlatList
             data={filteredData}
             renderItem={({ item }) => (
-              <TouchableOpacity
-                onPress={() => handleSelectItem(item)}
-                style={[
-                  {
-                    width: "100%",
-                    paddingHorizontal: 10,
-                    height: 54,
-                    borderBottomWidth: 0.2,
-                    borderBottomColor: "#8e8e8e",
-                    alignSelf: "center",
-                    justifyContent: "center",
-                  },
-                  // selectedItem?.value === item.value && styles.selectedItem,
-                ]}
-              >
+              <ItemList onPress={() => handleSelectItem(item)}>
                 <Text>{item.label}</Text>
-              </TouchableOpacity>
+              </ItemList>
             )}
             keyExtractor={(item) => item.value}
-            contentContainerStyle={[{ paddingBottom: 40, maxHeight: 200 }]}
+            contentContainerStyle={[{ paddingBottom: 10 }]}
           />
         </View>
       )}
