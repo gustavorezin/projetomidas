@@ -8,7 +8,7 @@ type APIInstanceProps = AxiosInstance & {
 };
 
 const api = axios.create({
-  baseURL: "http://192.168.15.109:8080/api",
+  baseURL: "http://192.168.15.106:8080/api",
   // baseURL: "http://177.54.58.124:8080/api",
 }) as APIInstanceProps;
 
