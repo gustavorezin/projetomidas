@@ -16,6 +16,7 @@ interface CustomSelectProps {
   data: SelectItem[];
   onSelect: (item: SelectItem | null) => void;
   showSearch?: boolean;
+  title: string;
 }
 
 export interface SelectItem {
@@ -27,6 +28,7 @@ export function CustomSelect({
   data,
   onSelect,
   showSearch = false,
+  title,
 }: CustomSelectProps) {
   const { COLORS } = useTheme();
   const [search, setSearch] = useState("");
@@ -57,8 +59,10 @@ export function CustomSelect({
         onPress={() => setIsSearchClicked(!isSearchClicked)}
         activeOpacity={0.7}
       >
-        <ButtonSelectText>
-          {selectedItem ? selectedItem.label : "Selecione um item"}
+        <ButtonSelectText
+          style={{ color: selectedItem ? COLORS.WHITE : COLORS.GRAY_400 }}
+        >
+          {selectedItem ? selectedItem.label : title}
         </ButtonSelectText>
         {isSearchClicked ? (
           <CaretUp size={22} color={COLORS.BRAND_LIGHT} />
@@ -84,7 +88,7 @@ export function CustomSelect({
             )}
             keyExtractor={(item) => item.value}
             showsVerticalScrollIndicator={false}
-            contentContainerStyle={[{ paddingBottom: 20 }]}
+            // contentContainerStyle={[{ paddingBottom: 20 }]}
           />
         </ContainerItems>
       )}

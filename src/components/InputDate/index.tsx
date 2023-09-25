@@ -47,7 +47,7 @@ export function InputDate({ value, onChange }: InputDateProps) {
       <ButtonDate>
         <ButtonDateText
           style={{ flex: 1 }}
-          placeholderTextColor={COLORS.GRAY_500}
+          placeholderTextColor={COLORS.GRAY_400}
           {...maskedInputProps}
         />
         <TouchableOpacity onPress={showDatePicker}>

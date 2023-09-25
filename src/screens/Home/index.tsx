@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo, useRef, useState } from "react";
-import { View, TouchableWithoutFeedback, Keyboard } from "react-native";
+import { View, TouchableWithoutFeedback, Keyboard, Text } from "react-native";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
@@ -36,6 +36,8 @@ type FormDataProps = {
   cdpessoaemp: number;
   dataem: string;
   categoria: string;
+  cdpessoapara: number;
+  cdnfecfg: number;
 };
 
 const schema = yup.object({
@@ -54,14 +56,32 @@ const schema = yup.object({
     .string()
     .notOneOf(["0"], "Selecione uma categoria válida")
     .required("Campo obrigatório"),
+  cdpessoapara: yup
+    .number()
+    .min(1, "Selecione um destinatário")
+    .required("Campo obrigatório"),
+  cdnfecfg: yup
+    .number()
+    .min(1, "Selecione uma config. fiscal")
+    .required("Campo obrigatório"),
 });
 
 export function Home() {
   const [isLoading, setIsLoading] = useState(false);
+  const [selectedIdEmp, setSelectedIdEmp] = useState(0);
+  const [selectedCdPessoaPara, setSelectedCdPessoaPara] = useState<CdPessoaDTO>(
+    {} as CdPessoaDTO
+  );
   const [dataDropdownEmps, setDataDropdownEmps] = useState<SelectItem[]>([]);
   const [dataDropdownDocCats, setDataDropdownDocCats] = useState<SelectItem[]>(
     []
   );
+  const [dataDropdownCdPessoaPara, setDataDropdownCdPessoaPara] = useState<
+    SelectItem[]
+  >([]);
+  const [dataDropdownCdNfeCfg, setDataDropdownCdNfeCfg] = useState<
+    SelectItem[]
+  >([]);
   const sheetRef = useRef<BottomSheet>(null);
   const { COLORS } = useTheme();
 
@@ -97,29 +117,6 @@ export function Home() {
     sheetRef.current?.snapToIndex(1);
   };
 
-  const fetchListDocCategoria = async () => {
-    try {
-      setIsLoading(true);
-      const response = await api.get("/private/app/listaslccatdoc");
-      const dropdownData = response.data.map((e: any) => ({
-        value: e,
-        label: docCategorys(e),
-      })) as SelectItem[];
-      setDataDropdownDocCats(dropdownData);
-    } catch (error) {
-      const isAppError = error instanceof AppError;
-      const text2 = isAppError ? error.message : "Empresa não encontrada";
-
-      setIsLoading(false);
-
-      Toast.show({
-        type: "error",
-        text1: "Não encontrado",
-        text2,
-      });
-    }
-  };
-
   const fetchListCdPessoaEmp = async () => {
     try {
       setIsLoading(true);
@@ -131,20 +128,128 @@ export function Home() {
       setDataDropdownEmps(dropdownData);
     } catch (error) {
       const isAppError = error instanceof AppError;
-      const text2 = isAppError ? error.message : "Empresa não encontrada";
+      const text2 = isAppError ? error.message : "";
 
       setIsLoading(false);
 
       Toast.show({
         type: "error",
-        text1: "Não encontrado",
+        text1: "Empresas não encontradas",
         text2,
       });
     }
   };
 
-  const handleSignIn = ({ cdpessoaemp, dataem, categoria }: FormDataProps) => {
-    alert(cdpessoaemp + "  " + dataem + "  " + categoria);
+  const fetchListDocCategoria = async () => {
+    try {
+      setIsLoading(true);
+      const response = await api.get("/private/app/listaslccatdoc");
+      const dropdownData = response.data.map((e: any) => ({
+        value: e,
+        label: docCategorys(e),
+      })) as SelectItem[];
+      setDataDropdownDocCats(dropdownData);
+    } catch (error) {
+      const isAppError = error instanceof AppError;
+      const text2 = isAppError ? error.message : "";
+
+      setIsLoading(false);
+
+      Toast.show({
+        type: "error",
+        text1: "Categorias não encontradas",
+        text2,
+      });
+    }
+  };
+
+  const fetchListCdPessoaPara = async () => {
+    try {
+      setIsLoading(true);
+      const response = await api.get("/private/cdpessoa/pessoa/ativo");
+      const dropdownData = response.data.map((e: CdPessoaDTO) => ({
+        value: e.id.toString(),
+        label: `${e.id.toString()} | ${e.nome}`,
+      })) as SelectItem[];
+      setDataDropdownCdPessoaPara(dropdownData);
+    } catch (error) {
+      const isAppError = error instanceof AppError;
+      const text2 = isAppError ? error.message : "";
+
+      setIsLoading(false);
+
+      Toast.show({
+        type: "error",
+        text1: "Clientes não encontrados",
+        text2,
+      });
+    }
+  };
+
+  const fetchGetCdPessoaPara = async (id: Number) => {
+    try {
+      setIsLoading(true);
+      const { data } = await api.get(`/private/cdpessoa/pessoa/${id}`);
+      console.log(data.id);
+      setSelectedCdPessoaPara(data);
+      console.log(selectedCdPessoaPara);
+    } catch (error) {
+      const isAppError = error instanceof AppError;
+      const text2 = isAppError ? error.message : "";
+
+      setIsLoading(false);
+
+      Toast.show({
+        type: "error",
+        text1: "Cliente não encontrado",
+        text2,
+      });
+    }
+  };
+
+  const fetchListCdNfeCfg = async () => {
+    try {
+      setIsLoading(true);
+      const response = await api.get(
+        `/private/cdnfecfg/nfecfg/local/${selectedIdEmp}/tpop/1/crtdest/${selectedCdPessoaPara.crt}/coduf/${selectedCdPessoaPara.cdestado.id}`
+      );
+      const dropdownData = response.data.map((e: any) => ({
+        value: e.id.toString(),
+        label: `CFOP ${e.cfop} | ${e.descricao}`,
+      })) as SelectItem[];
+      setDataDropdownCdNfeCfg(dropdownData);
+    } catch (error) {
+      const isAppError = error instanceof AppError;
+      const text2 = isAppError ? error.message : "";
+
+      setIsLoading(false);
+
+      Toast.show({
+        type: "error",
+        text1: "Config. fiscais não encontradas",
+        text2,
+      });
+    }
+  };
+
+  const handleCdPessoaEmpSelect = async (selectedValue: number) => {
+    setSelectedIdEmp(selectedValue);
+    await fetchListCdPessoaPara();
+  };
+
+  const handleCdPessoaParaSelect = async (selectedValue: number) => {
+    await fetchGetCdPessoaPara(selectedValue);
+
+    await fetchListCdNfeCfg();
+  };
+
+  const handleSignIn = ({
+    cdpessoaemp,
+    dataem,
+    categoria,
+    cdpessoapara,
+  }: FormDataProps) => {
+    alert(cdpessoaemp + "  " + dataem + "  " + categoria + "  " + cdpessoapara);
   };
 
   return (
@@ -169,12 +274,14 @@ export function Home() {
             <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
               <View style={{ flex: 1 }}>
                 <Highlight title="Nova venda" />
-                <View style={{ flex: 1, marginTop: 10, gap: 10 }}>
+                <View style={{ flex: 1, marginVertical: 20, gap: 10 }}>
                   <CustomSelectControlled
+                    title="Selecione uma empresa"
                     name="cdpessoaemp"
                     control={control}
                     data={dataDropdownEmps}
                     error={errors.cdpessoaemp}
+                    onChange={handleCdPessoaEmpSelect}
                   />
                   <InputDateControlled
                     defaultValue={getCurrentDate()}
@@ -183,11 +290,34 @@ export function Home() {
                     error={errors.dataem}
                   />
                   <CustomSelectControlled
+                    title="Selecione uma categoria"
                     name="categoria"
                     control={control}
                     data={dataDropdownDocCats}
                     error={errors.categoria}
                   />
+                  {selectedIdEmp > 0 && (
+                    <>
+                      <CustomSelectControlled
+                        title="Selecione um destinatário"
+                        name="cdpessoapara"
+                        control={control}
+                        data={dataDropdownCdPessoaPara}
+                        error={errors.cdpessoapara}
+                        onChange={handleCdPessoaParaSelect}
+                        showSearch
+                      />
+                      {selectedCdPessoaPara.id > 0 && (
+                        <CustomSelectControlled
+                          title="Selecione uma config. fiscal"
+                          name="cdnfecfg"
+                          control={control}
+                          data={dataDropdownCdNfeCfg}
+                          error={errors.cdnfecfg}
+                        />
+                      )}
+                    </>
+                  )}
                 </View>
                 <Button title="Iniciar" onPress={handleSubmit(handleSignIn)} />
               </View>

@@ -9,6 +9,9 @@ interface CustomSelectControlledProps {
   data: SelectItem[];
   showSearch?: boolean;
   error?: FieldError;
+  title: string;
+  defaultValue?: any;
+  onChange?: (value: any) => void;
 }
 
 export function CustomSelectControlled({
@@ -17,19 +20,26 @@ export function CustomSelectControlled({
   data,
   showSearch = false,
   error,
+  title,
+  defaultValue = "0",
+  onChange,
 }: CustomSelectControlledProps) {
   return (
     <>
       <Controller
         name={name}
         control={control}
-        defaultValue={0}
+        defaultValue={defaultValue}
         render={({ field }) => (
           <CustomSelect
+            title={title}
             data={data}
             onSelect={(item) => {
               field.onChange(item?.value);
               field.onBlur();
+              if (onChange) {
+                onChange(item?.value);
+              }
             }}
             // onSelect={(item) => {
             //   const numericValue = parseInt(item?.value || "0");
