@@ -18,7 +18,7 @@ interface CustomSelectProps {
   showSearch?: boolean;
 }
 
-interface SelectItem {
+export interface SelectItem {
   value: string;
   label: string;
 }

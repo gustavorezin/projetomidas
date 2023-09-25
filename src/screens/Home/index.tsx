@@ -19,6 +19,8 @@ import { useTheme } from "styled-components/native";
 import { Controller, useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { CustomSelectControlled } from "@components/CustomSelectControlled";
+import { InputDate } from "@components/InputDate";
 
 interface SelectItem {
   value: string;
@@ -26,14 +28,22 @@ interface SelectItem {
 }
 
 type FormDataProps = {
-  emp: number;
+  cdpessoaemp: number;
+  dataem: string;
 };
 
 const schema = yup.object({
   // Outros campos do formulário
-  emp: yup
+  cdpessoaemp: yup
     .number()
-    .min(1, "Selecione uma opção válida")
+    .min(1, "Selecione uma empresa")
+    .required("Campo obrigatório"),
+  dataem: yup
+    .string()
+    .matches(
+      /^(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[0-2])\/\d{4}$/,
+      "Data inválida"
+    )
     .required("Campo obrigatório"),
 });
 
@@ -92,8 +102,8 @@ export function Home() {
     }
   }
 
-  async function handleSignIn({ emp }: FormDataProps) {
-    alert(emp);
+  async function handleSignIn({ cdpessoaemp }: FormDataProps) {
+    alert(cdpessoaemp);
   }
 
   return (
@@ -115,21 +125,24 @@ export function Home() {
           backdropComponent={renderBackdrop}
         >
           <ContainerBottomSheet>
-            <View style={{ flex: 1, gap: 10 }}>
+            <View style={{ flex: 1 }}>
               <Highlight title="Nova venda" />
-              <View style={{ flex: 1, marginTop: 10 }}>
-                <Controller
-                  name="emp"
+              <View style={{ flex: 1, marginTop: 10, gap: 10 }}>
+                <CustomSelectControlled
+                  name="cdpessoaemp"
                   control={control}
-                  defaultValue={0}
-                  render={({ field }) => (
-                    <CustomSelect
-                      data={dataDropdownEmps}
-                      onSelect={(item) => {
-                        const numericValue = parseInt(item?.value || "0");
-                        field.onChange(isNaN(numericValue) ? 0 : numericValue);
-                        field.onBlur();
-                      }}
+                  data={dataDropdownEmps}
+                  error={errors.cdpessoaemp}
+                />
+                <Controller
+                  name="dataem" // O nome do campo no formulário
+                  control={control}
+                  defaultValue="" // O valor padrão do campo (pode ser vazio)
+                  render={({ field: { value, onChange } }) => (
+                    <InputDate
+                      value={value}
+                      onChange={onChange}
+                      error={errors.dataem}
                     />
                   )}
                 />
