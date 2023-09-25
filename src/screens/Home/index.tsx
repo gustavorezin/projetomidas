@@ -16,18 +16,40 @@ import { AppError } from "@utils/AppError";
 import { View } from "react-native";
 import Toast from "react-native-toast-message";
 import { useTheme } from "styled-components/native";
+import { Controller, useForm } from "react-hook-form";
+import * as yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
 
 interface SelectItem {
   value: string;
   label: string;
 }
 
+type FormDataProps = {
+  emp: number;
+};
+
+const schema = yup.object({
+  // Outros campos do formulário
+  emp: yup
+    .number()
+    .min(1, "Selecione uma opção válida")
+    .required("Campo obrigatório"),
+});
+
 export function Home() {
   const [isLoading, setIsLoading] = useState(false);
   const [dataDropdownEmps, setDataDropdownEmps] = useState<SelectItem[]>([]);
-  const [selectedEmp, setSelectedEmp] = useState<SelectItem | null>(null);
   const sheetRef = useRef<BottomSheet>(null);
   const { COLORS } = useTheme();
+
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FormDataProps>({
+    resolver: yupResolver(schema),
+  });
 
   const snapPoints = useMemo(() => ["50%", "90%"], []);
 
@@ -70,9 +92,10 @@ export function Home() {
     }
   }
 
-  const handleSelect = (item: SelectItem | null) => {
-    setSelectedEmp(item);
-  };
+  async function handleSignIn({ emp }: FormDataProps) {
+    alert(emp);
+  }
+
   return (
     <BottomSheetModalProvider>
       <Container>
@@ -95,9 +118,23 @@ export function Home() {
             <View style={{ flex: 1, gap: 10 }}>
               <Highlight title="Nova venda" />
               <View style={{ flex: 1, marginTop: 10 }}>
-                <CustomSelect data={dataDropdownEmps} onSelect={handleSelect} />
+                <Controller
+                  name="emp"
+                  control={control}
+                  defaultValue={0}
+                  render={({ field }) => (
+                    <CustomSelect
+                      data={dataDropdownEmps}
+                      onSelect={(item) => {
+                        const numericValue = parseInt(item?.value || "0");
+                        field.onChange(isNaN(numericValue) ? 0 : numericValue);
+                        field.onBlur();
+                      }}
+                    />
+                  )}
+                />
               </View>
-              <Button title="Iniciar" />
+              <Button title="Iniciar" onPress={handleSubmit(handleSignIn)} />
             </View>
           </ContainerBottomSheet>
         </BottomSheet>

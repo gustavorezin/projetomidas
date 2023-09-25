@@ -1,7 +1,7 @@
-import { BottomSheetFlatList } from "@gorhom/bottom-sheet";
 import { CaretDown, CaretUp } from "phosphor-react-native";
 import React, { useState } from "react";
 import { Text } from "react-native";
+import { FlatList } from "react-native-gesture-handler";
 import { useTheme } from "styled-components/native";
 import {
   ButtonSelect,
@@ -11,7 +11,6 @@ import {
   InputTextSearch,
   ItemList,
 } from "./styles";
-import { FlatList } from "react-native-gesture-handler";
 
 interface CustomSelectProps {
   data: SelectItem[];
