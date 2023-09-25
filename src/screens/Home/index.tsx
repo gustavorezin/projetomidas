@@ -1,25 +1,31 @@
-import { useCallback, useMemo, useRef, useState } from "react";
+import React, { useCallback, useMemo, useRef, useState } from "react";
+import { View, TouchableWithoutFeedback, Keyboard } from "react-native";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
+import { format } from "date-fns";
+
 import { Container, ContainerBottomSheet } from "./styles";
+
+import { Header } from "@components/Header";
+import { Highlight } from "@components/Highlight";
 import { Button } from "@components/Button";
 import { CardButton } from "@components/CardButton";
 import { CustomSelectControlled } from "@components/CustomSelectControlled";
-import { Header } from "@components/Header";
-import { Highlight } from "@components/Highlight";
 import { InputDateControlled } from "@components/InputDateControlled";
-import { CdPessoaDTO } from "@dtos/CdPessoaDTO";
+
 import BottomSheet, {
   BottomSheetBackdrop,
   BottomSheetModalProvider,
 } from "@gorhom/bottom-sheet";
-import { yupResolver } from "@hookform/resolvers/yup";
+
+import { CdPessoaDTO } from "@dtos/CdPessoaDTO";
 import { api } from "@services/api";
 import { AppError } from "@utils/AppError";
-import { useForm } from "react-hook-form";
-import { Keyboard, TouchableWithoutFeedback, View } from "react-native";
-import Toast from "react-native-toast-message";
 import { useTheme } from "styled-components/native";
-import * as yup from "yup";
-import { format } from "date-fns";
+
+import { docCategorys } from "@utils/Doc";
+import Toast from "react-native-toast-message";
 
 interface SelectItem {
   value: string;
@@ -29,6 +35,7 @@ interface SelectItem {
 type FormDataProps = {
   cdpessoaemp: number;
   dataem: string;
+  categoria: string;
 };
 
 const schema = yup.object({
@@ -43,18 +50,25 @@ const schema = yup.object({
       "Data inválida"
     )
     .required("Campo obrigatório"),
+  categoria: yup
+    .string()
+    .notOneOf(["0"], "Selecione uma categoria válida")
+    .required("Campo obrigatório"),
 });
 
 export function Home() {
   const [isLoading, setIsLoading] = useState(false);
   const [dataDropdownEmps, setDataDropdownEmps] = useState<SelectItem[]>([]);
+  const [dataDropdownDocCats, setDataDropdownDocCats] = useState<SelectItem[]>(
+    []
+  );
   const sheetRef = useRef<BottomSheet>(null);
   const { COLORS } = useTheme();
 
-  function getCurrentDate() {
+  const getCurrentDate = () => {
     const currentDate = new Date();
     return format(currentDate, "dd/MM/yyyy");
-  }
+  };
 
   const {
     control,
@@ -77,12 +91,36 @@ export function Home() {
     []
   );
 
-  async function handleSaleModal() {
+  const handleSaleModal = async () => {
     await fetchListCdPessoaEmp();
+    await fetchListDocCategoria();
     sheetRef.current?.snapToIndex(1);
-  }
+  };
 
-  async function fetchListCdPessoaEmp() {
+  const fetchListDocCategoria = async () => {
+    try {
+      setIsLoading(true);
+      const response = await api.get("/private/app/listaslccatdoc");
+      const dropdownData = response.data.map((e: any) => ({
+        value: e,
+        label: docCategorys(e),
+      })) as SelectItem[];
+      setDataDropdownDocCats(dropdownData);
+    } catch (error) {
+      const isAppError = error instanceof AppError;
+      const text2 = isAppError ? error.message : "Empresa não encontrada";
+
+      setIsLoading(false);
+
+      Toast.show({
+        type: "error",
+        text1: "Não encontrado",
+        text2,
+      });
+    }
+  };
+
+  const fetchListCdPessoaEmp = async () => {
     try {
       setIsLoading(true);
       const response = await api.get("/private/cdpessoa/pessoa/localativos");
@@ -103,11 +141,11 @@ export function Home() {
         text2,
       });
     }
-  }
+  };
 
-  async function handleSignIn({ cdpessoaemp, dataem }: FormDataProps) {
-    alert(cdpessoaemp + "  " + dataem);
-  }
+  const handleSignIn = ({ cdpessoaemp, dataem, categoria }: FormDataProps) => {
+    alert(cdpessoaemp + "  " + dataem + "  " + categoria);
+  };
 
   return (
     <BottomSheetModalProvider>
@@ -138,14 +176,18 @@ export function Home() {
                     data={dataDropdownEmps}
                     error={errors.cdpessoaemp}
                   />
-                  <View style={{ flexDirection: "row", gap: 10 }}>
-                    <InputDateControlled
-                      defaultValue={getCurrentDate()}
-                      name="dataem"
-                      control={control}
-                      error={errors.dataem}
-                    />
-                  </View>
+                  <InputDateControlled
+                    defaultValue={getCurrentDate()}
+                    name="dataem"
+                    control={control}
+                    error={errors.dataem}
+                  />
+                  <CustomSelectControlled
+                    name="categoria"
+                    control={control}
+                    data={dataDropdownDocCats}
+                    error={errors.categoria}
+                  />
                 </View>
                 <Button title="Iniciar" onPress={handleSubmit(handleSignIn)} />
               </View>

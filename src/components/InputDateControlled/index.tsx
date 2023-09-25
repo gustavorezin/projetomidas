@@ -1,7 +1,6 @@
 import { InputDate } from "@components/InputDate";
 import { Controller, FieldError } from "react-hook-form";
 import { Error } from "./styles";
-import { View } from "react-native";
 
 interface InputDateControlledProps {
   name: string;
@@ -17,7 +16,7 @@ export function InputDateControlled({
   error,
 }: InputDateControlledProps) {
   return (
-    <View style={{ flexDirection: "column", flex: 1 }}>
+    <>
       <Controller
         name={name}
         control={control}
@@ -27,6 +26,6 @@ export function InputDateControlled({
         )}
       />
       {error && <Error>{error.message}</Error>}
-    </View>
+    </>
   );
 }

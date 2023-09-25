@@ -28,10 +28,14 @@ export function CustomSelectControlled({
           <CustomSelect
             data={data}
             onSelect={(item) => {
-              const numericValue = parseInt(item?.value || "0");
-              field.onChange(isNaN(numericValue) ? 0 : numericValue);
+              field.onChange(item?.value);
               field.onBlur();
             }}
+            // onSelect={(item) => {
+            //   const numericValue = parseInt(item?.value || "0");
+            //   field.onChange(isNaN(numericValue) ? 0 : numericValue);
+            //   field.onBlur();
+            // }}
             showSearch={showSearch}
           />
         )}
