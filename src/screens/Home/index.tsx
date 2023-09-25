@@ -1,26 +1,25 @@
 import { useCallback, useMemo, useRef, useState } from "react";
 import { Container, ContainerBottomSheet } from "./styles";
-
 import { Button } from "@components/Button";
 import { CardButton } from "@components/CardButton";
-import { CustomSelect } from "@components/CustomSelect";
+import { CustomSelectControlled } from "@components/CustomSelectControlled";
 import { Header } from "@components/Header";
 import { Highlight } from "@components/Highlight";
+import { InputDateControlled } from "@components/InputDateControlled";
 import { CdPessoaDTO } from "@dtos/CdPessoaDTO";
 import BottomSheet, {
   BottomSheetBackdrop,
   BottomSheetModalProvider,
 } from "@gorhom/bottom-sheet";
+import { yupResolver } from "@hookform/resolvers/yup";
 import { api } from "@services/api";
 import { AppError } from "@utils/AppError";
-import { View } from "react-native";
+import { useForm } from "react-hook-form";
+import { Keyboard, TouchableWithoutFeedback, View } from "react-native";
 import Toast from "react-native-toast-message";
 import { useTheme } from "styled-components/native";
-import { Controller, useForm } from "react-hook-form";
 import * as yup from "yup";
-import { yupResolver } from "@hookform/resolvers/yup";
-import { CustomSelectControlled } from "@components/CustomSelectControlled";
-import { InputDate } from "@components/InputDate";
+import { format } from "date-fns";
 
 interface SelectItem {
   value: string;
@@ -33,7 +32,6 @@ type FormDataProps = {
 };
 
 const schema = yup.object({
-  // Outros campos do formulário
   cdpessoaemp: yup
     .number()
     .min(1, "Selecione uma empresa")
@@ -52,6 +50,11 @@ export function Home() {
   const [dataDropdownEmps, setDataDropdownEmps] = useState<SelectItem[]>([]);
   const sheetRef = useRef<BottomSheet>(null);
   const { COLORS } = useTheme();
+
+  function getCurrentDate() {
+    const currentDate = new Date();
+    return format(currentDate, "dd/MM/yyyy");
+  }
 
   const {
     control,
@@ -102,8 +105,8 @@ export function Home() {
     }
   }
 
-  async function handleSignIn({ cdpessoaemp }: FormDataProps) {
-    alert(cdpessoaemp);
+  async function handleSignIn({ cdpessoaemp, dataem }: FormDataProps) {
+    alert(cdpessoaemp + "  " + dataem);
   }
 
   return (
@@ -125,30 +128,28 @@ export function Home() {
           backdropComponent={renderBackdrop}
         >
           <ContainerBottomSheet>
-            <View style={{ flex: 1 }}>
-              <Highlight title="Nova venda" />
-              <View style={{ flex: 1, marginTop: 10, gap: 10 }}>
-                <CustomSelectControlled
-                  name="cdpessoaemp"
-                  control={control}
-                  data={dataDropdownEmps}
-                  error={errors.cdpessoaemp}
-                />
-                <Controller
-                  name="dataem" // O nome do campo no formulário
-                  control={control}
-                  defaultValue="" // O valor padrão do campo (pode ser vazio)
-                  render={({ field: { value, onChange } }) => (
-                    <InputDate
-                      value={value}
-                      onChange={onChange}
+            <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+              <View style={{ flex: 1 }}>
+                <Highlight title="Nova venda" />
+                <View style={{ flex: 1, marginTop: 10, gap: 10 }}>
+                  <CustomSelectControlled
+                    name="cdpessoaemp"
+                    control={control}
+                    data={dataDropdownEmps}
+                    error={errors.cdpessoaemp}
+                  />
+                  <View style={{ flexDirection: "row", gap: 10 }}>
+                    <InputDateControlled
+                      defaultValue={getCurrentDate()}
+                      name="dataem"
+                      control={control}
                       error={errors.dataem}
                     />
-                  )}
-                />
+                  </View>
+                </View>
+                <Button title="Iniciar" onPress={handleSubmit(handleSignIn)} />
               </View>
-              <Button title="Iniciar" onPress={handleSubmit(handleSignIn)} />
-            </View>
+            </TouchableWithoutFeedback>
           </ContainerBottomSheet>
         </BottomSheet>
       </Container>

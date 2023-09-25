@@ -61,9 +61,9 @@ export function CustomSelect({
           {selectedItem ? selectedItem.label : "Selecione um item"}
         </ButtonSelectText>
         {isSearchClicked ? (
-          <CaretUp size={22} color={COLORS.WHITE} />
+          <CaretUp size={22} color={COLORS.BRAND_LIGHT} />
         ) : (
-          <CaretDown size={22} color={COLORS.WHITE} />
+          <CaretDown size={22} color={COLORS.BRAND_LIGHT} />
         )}
       </ButtonSelect>
       {isSearchClicked && (

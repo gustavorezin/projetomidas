@@ -3,17 +3,15 @@ import React, { useState } from "react";
 import { TouchableOpacity } from "react-native";
 import { Masks, useMaskedInputProps } from "react-native-mask-input";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
-import { ButtonDate, ButtonDateText, Error } from "./styles";
+import { ButtonDate, ButtonDateText } from "./styles";
 import { useTheme } from "styled-components";
-import { FieldError } from "react-hook-form";
 
 interface InputDateProps {
-  value: string; // O valor do campo
-  onChange: (newValue: string) => void; // Função para atualizar o valor
-  error?: FieldError;
+  value: string;
+  onChange: (newValue: string) => void;
 }
 
-export function InputDate({ value, onChange, error }: InputDateProps) {
+export function InputDate({ value, onChange }: InputDateProps) {
   const { COLORS } = useTheme();
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
 
@@ -47,12 +45,15 @@ export function InputDate({ value, onChange, error }: InputDateProps) {
   return (
     <>
       <ButtonDate>
-        <ButtonDateText style={{ flex: 1 }} {...maskedInputProps} />
+        <ButtonDateText
+          style={{ flex: 1 }}
+          placeholderTextColor={COLORS.GRAY_500}
+          {...maskedInputProps}
+        />
         <TouchableOpacity onPress={showDatePicker}>
           <Calendar size={20} color={COLORS.BRAND_LIGHT} />
         </TouchableOpacity>
       </ButtonDate>
-      {error && <Error>{error.message}</Error>}
       <DateTimePickerModal
         isVisible={isDatePickerVisible}
         mode="date"

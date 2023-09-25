@@ -82,3 +82,8 @@
 
 - [Mask Input](https://www.npmjs.com/package/react-native-mask-input)
 - npm install react-native-mask-input
+
+## Date fns
+
+- [Date Fns](https://www.npmjs.com/package/date-fns)
+- npm install date-fns --save
