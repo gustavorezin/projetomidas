@@ -219,7 +219,7 @@ export function NewSaleBottomSheet() {
         <Highlight title="Nova venda" />
         <View style={{ flex: 1, marginVertical: 20, gap: 10 }}>
           <CustomSelectControlled
-            title="Selecione uma empresa"
+            label="Empresa/local de controle"
             name="cdpessoaemp"
             control={control}
             data={dataDropdownEmps}
@@ -227,13 +227,14 @@ export function NewSaleBottomSheet() {
             onChange={handleCdPessoaEmpSelect}
           />
           <InputDateControlled
-            defaultValue={getCurrentDate()}
+            label="Data de emissão"
             name="dataem"
             control={control}
             error={errors.dataem}
+            defaultValue={getCurrentDate()}
           />
           <CustomSelectControlled
-            title="Selecione uma categoria"
+            label="Categoria"
             name="categoria"
             control={control}
             data={dataDropdownDocCats}
@@ -242,7 +243,7 @@ export function NewSaleBottomSheet() {
           {selectedIdEmp > 0 && (
             <>
               <CustomSelectControlled
-                title="Selecione um destinatário"
+                label="Destinatário"
                 name="cdpessoapara"
                 control={control}
                 data={dataDropdownCdPessoaPara}
@@ -252,7 +253,7 @@ export function NewSaleBottomSheet() {
               />
               {selectedCdPessoaPara.id > 0 && (
                 <CustomSelectControlled
-                  title="Selecione uma config. fiscal"
+                  label="Tributação a ser aplicada | Configuração fiscal"
                   name="cdnfecfg"
                   control={control}
                   data={dataDropdownCdNfeCfg}

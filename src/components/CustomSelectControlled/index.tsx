@@ -9,7 +9,7 @@ interface CustomSelectControlledProps {
   data: SelectItem[];
   showSearch?: boolean;
   error?: FieldError;
-  title: string;
+  label: string;
   defaultValue?: any;
   onChange?: (value: any) => void;
 }
@@ -20,7 +20,7 @@ export function CustomSelectControlled({
   data,
   showSearch = false,
   error,
-  title,
+  label,
   defaultValue = "0",
   onChange,
 }: CustomSelectControlledProps) {
@@ -32,7 +32,7 @@ export function CustomSelectControlled({
         defaultValue={defaultValue}
         render={({ field }) => (
           <CustomSelect
-            title={title}
+            label={label}
             data={data}
             onSelect={(item) => {
               field.onChange(item?.value);

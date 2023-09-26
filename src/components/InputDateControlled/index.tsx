@@ -7,6 +7,7 @@ interface InputDateControlledProps {
   control: any;
   defaultValue?: any;
   error?: FieldError;
+  label: string;
 }
 
 export function InputDateControlled({
@@ -14,6 +15,7 @@ export function InputDateControlled({
   control,
   defaultValue = "",
   error,
+  label,
 }: InputDateControlledProps) {
   return (
     <>
@@ -22,7 +24,7 @@ export function InputDateControlled({
         control={control}
         defaultValue={defaultValue}
         render={({ field: { value, onChange } }) => (
-          <InputDate value={value} onChange={onChange} />
+          <InputDate value={value} label={label} onChange={onChange} />
         )}
       />
       {error && <Error>{error.message}</Error>}

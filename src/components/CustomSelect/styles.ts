@@ -1,7 +1,7 @@
 import styled from "styled-components/native";
 
 export const Container = styled.View`
-  height: 56px;
+  height: 78px;
 `;
 
 export const ButtonSelect = styled.TouchableOpacity`

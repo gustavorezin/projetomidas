@@ -3,15 +3,17 @@ import React, { useState } from "react";
 import { TouchableOpacity } from "react-native";
 import { Masks, useMaskedInputProps } from "react-native-mask-input";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
-import { ButtonDate, ButtonDateText } from "./styles";
+import { ButtonDate, ButtonDateText, Container } from "./styles";
 import { useTheme } from "styled-components";
+import { Label } from "@components/Label";
 
 interface InputDateProps {
   value: string;
   onChange: (newValue: string) => void;
+  label: string;
 }
 
-export function InputDate({ value, onChange }: InputDateProps) {
+export function InputDate({ value, onChange, label }: InputDateProps) {
   const { COLORS } = useTheme();
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
 
@@ -44,16 +46,19 @@ export function InputDate({ value, onChange }: InputDateProps) {
 
   return (
     <>
-      <ButtonDate>
-        <ButtonDateText
-          style={{ flex: 1 }}
-          placeholderTextColor={COLORS.GRAY_400}
-          {...maskedInputProps}
-        />
-        <TouchableOpacity onPress={showDatePicker}>
-          <Calendar size={20} color={COLORS.BRAND_LIGHT} />
-        </TouchableOpacity>
-      </ButtonDate>
+      <Container>
+        <Label label={label} />
+        <ButtonDate>
+          <ButtonDateText
+            style={{ flex: 1 }}
+            placeholderTextColor={COLORS.GRAY_400}
+            {...maskedInputProps}
+          />
+          <TouchableOpacity onPress={showDatePicker}>
+            <Calendar size={20} color={COLORS.BRAND_LIGHT} />
+          </TouchableOpacity>
+        </ButtonDate>
+      </Container>
       <DateTimePickerModal
         isVisible={isDatePickerVisible}
         mode="date"

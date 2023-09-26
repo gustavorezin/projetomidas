@@ -1,5 +1,9 @@
 import styled, { css } from "styled-components/native";
 
+export const Container = styled.View`
+  height: 78px;
+`;
+
 export const ButtonDate = styled.View`
   flex: 1;
   flex-direction: row;

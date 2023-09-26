@@ -11,12 +11,13 @@ import {
   InputTextSearch,
   ItemList,
 } from "./styles";
+import { Label } from "@components/Label";
 
 interface CustomSelectProps {
   data: SelectItem[];
   onSelect: (item: SelectItem | null) => void;
   showSearch?: boolean;
-  title: string;
+  label: string;
 }
 
 export interface SelectItem {
@@ -28,7 +29,7 @@ export function CustomSelect({
   data,
   onSelect,
   showSearch = false,
-  title,
+  label,
 }: CustomSelectProps) {
   const { COLORS } = useTheme();
   const [search, setSearch] = useState("");
@@ -42,7 +43,7 @@ export function CustomSelect({
   };
 
   const filteredData = data.filter((item) =>
-    item.label.toLowerCase().includes(search.toLowerCase())
+    item.label.toUpperCase().includes(search.toLowerCase())
   );
 
   const maxHeight = 200;
@@ -55,6 +56,7 @@ export function CustomSelect({
 
   return (
     <Container>
+      <Label label={label} />
       <ButtonSelect
         onPress={() => setIsSearchClicked(!isSearchClicked)}
         activeOpacity={0.7}
@@ -62,7 +64,7 @@ export function CustomSelect({
         <ButtonSelectText
           style={{ color: selectedItem ? COLORS.WHITE : COLORS.GRAY_400 }}
         >
-          {selectedItem ? selectedItem.label : title}
+          {selectedItem ? selectedItem.label : "Selecione um item"}
         </ButtonSelectText>
         {isSearchClicked ? (
           <CaretUp size={22} color={COLORS.BRAND_LIGHT} />
