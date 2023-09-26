@@ -62,6 +62,7 @@ export function CustomSelect({
         activeOpacity={0.7}
       >
         <ButtonSelectText
+          numberOfLines={1}
           style={{ color: selectedItem ? COLORS.WHITE : COLORS.GRAY_400 }}
         >
           {selectedItem ? selectedItem.label : "Selecione um item"}
@@ -85,7 +86,7 @@ export function CustomSelect({
             data={filteredData}
             renderItem={({ item }) => (
               <ItemList onPress={() => handleSelectItem(item)}>
-                <Text>{item.label}</Text>
+                <Text numberOfLines={2}>{item.label}</Text>
               </ItemList>
             )}
             keyExtractor={(item) => item.value}

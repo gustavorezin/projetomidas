@@ -25,6 +25,8 @@ type FormNewSaleProps = {
   categoria: string;
   cdpessoapara: number;
   cdnfecfg: number;
+  cdprodutotab: number;
+  cdpessoavendedor: number;
 };
 
 const schema = yup.object({
@@ -41,7 +43,7 @@ const schema = yup.object({
     .required("Campo obrigatório"),
   categoria: yup
     .string()
-    .notOneOf(["0"], "Selecione uma categoria válida")
+    .notOneOf(["0"], "Selecione uma categoria")
     .required("Campo obrigatório"),
   cdpessoapara: yup
     .number()
@@ -50,6 +52,14 @@ const schema = yup.object({
   cdnfecfg: yup
     .number()
     .min(1, "Selecione uma config. fiscal")
+    .required("Campo obrigatório"),
+  cdprodutotab: yup
+    .number()
+    .min(1, "Selecione uma tabela de preços")
+    .required("Campo obrigatório"),
+  cdpessoavendedor: yup
+    .number()
+    .min(1, "Selecione um vendedor")
     .required("Campo obrigatório"),
 });
 
@@ -68,6 +78,11 @@ export function NewSaleBottomSheet() {
   const [dataDropdownCdNfeCfg, setDataDropdownCdNfeCfg] = useState<
     SelectItem[]
   >([]);
+  const [dataDropdownCdProdutoTab, setDataDropdownCdProdutoTab] = useState<
+    SelectItem[]
+  >([]);
+  const [dataDropdownCdPessoaVendedor, setDataDropdownCdPessoaVendedor] =
+    useState<SelectItem[]>([]);
 
   const getCurrentDate = () => {
     const currentDate = new Date();
@@ -145,9 +160,9 @@ export function NewSaleBottomSheet() {
   const fetchGetCdPessoaPara = async (id: Number) => {
     try {
       const { data } = await api.get(`/private/cdpessoa/pessoa/${id}`);
-      console.log(data.id);
+      //console.log(data.id);
       setSelectedCdPessoaPara(data);
-      console.log(selectedCdPessoaPara);
+      //console.log(selectedCdPessoaPara);
     } catch (error) {
       const isAppError = error instanceof AppError;
       const text2 = isAppError ? error.message : "";
@@ -182,6 +197,50 @@ export function NewSaleBottomSheet() {
     }
   };
 
+  const fetchListCdProdutoTab = async () => {
+    try {
+      const response = await api.get(
+        `/private/cdproduto/produto/tab/paradoc/lc/${selectedIdEmp}/uf/${selectedCdPessoaPara.cdestado.uf}`
+      );
+      const dropdownData = response.data.map((e: any) => ({
+        value: e.id.toString(),
+        label: e.nome,
+      })) as SelectItem[];
+      setDataDropdownCdProdutoTab(dropdownData);
+    } catch (error) {
+      const isAppError = error instanceof AppError;
+      const text2 = isAppError ? error.message : "";
+
+      Toast.show({
+        type: "error",
+        text1: "Config. fiscais não encontradas",
+        text2,
+      });
+    }
+  };
+
+  const fetchListCdPessoaVendedor = async () => {
+    try {
+      const response = await api.get(
+        `/private/cdpessoa/pessoa/tp/VENDEDOR/status/ATIVO/local/${selectedIdEmp}`
+      );
+      const dropdownData = response.data.map((e: any) => ({
+        value: e.id.toString(),
+        label: e.nome,
+      })) as SelectItem[];
+      setDataDropdownCdPessoaVendedor(dropdownData);
+    } catch (error) {
+      const isAppError = error instanceof AppError;
+      const text2 = isAppError ? error.message : "";
+
+      Toast.show({
+        type: "error",
+        text1: "Config. fiscais não encontradas",
+        text2,
+      });
+    }
+  };
+
   const handleCdPessoaEmpSelect = async (selectedValue: number) => {
     setSelectedIdEmp(selectedValue);
     await fetchListCdPessoaPara();
@@ -190,7 +249,12 @@ export function NewSaleBottomSheet() {
   const handleCdPessoaParaSelect = async (selectedValue: number) => {
     console.log(selectedValue);
     await fetchGetCdPessoaPara(selectedValue);
-    await fetchListCdNfeCfg();
+    const fetchData = async () => {
+      await fetchListCdNfeCfg();
+      await fetchListCdProdutoTab();
+      await fetchListCdPessoaVendedor();
+    };
+    fetchData();
   };
 
   const handleFormNewSaleSubmit = (data: FormNewSaleProps) => {
@@ -201,7 +265,13 @@ export function NewSaleBottomSheet() {
         "  " +
         data.categoria +
         "  " +
-        data.cdpessoapara
+        data.cdpessoapara +
+        "  " +
+        data.cdnfecfg +
+        "  " +
+        data.cdprodutotab +
+        "  " +
+        data.cdpessoavendedor
     );
   };
 
@@ -217,7 +287,7 @@ export function NewSaleBottomSheet() {
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <Container>
         <Highlight title="Nova venda" />
-        <View style={{ flex: 1, marginVertical: 20, gap: 10 }}>
+        <View style={{ flex: 1, marginVertical: 20, gap: 6 }}>
           <CustomSelectControlled
             label="Empresa/local de controle"
             name="cdpessoaemp"
@@ -252,21 +322,37 @@ export function NewSaleBottomSheet() {
                 showSearch
               />
               {selectedCdPessoaPara.id > 0 && (
-                <CustomSelectControlled
-                  label="Tributação a ser aplicada | Configuração fiscal"
-                  name="cdnfecfg"
-                  control={control}
-                  data={dataDropdownCdNfeCfg}
-                  error={errors.cdnfecfg}
-                />
+                <>
+                  <CustomSelectControlled
+                    label="Tributação a ser aplicada | Configuração fiscal"
+                    name="cdnfecfg"
+                    control={control}
+                    data={dataDropdownCdNfeCfg}
+                    error={errors.cdnfecfg}
+                  />
+                  <CustomSelectControlled
+                    label="Tabela de preços"
+                    name="cdprodutotab"
+                    control={control}
+                    data={dataDropdownCdProdutoTab}
+                    error={errors.cdprodutotab}
+                  />
+                  <CustomSelectControlled
+                    label="Vendedor/representante"
+                    name="cdpessoavendedor"
+                    control={control}
+                    data={dataDropdownCdPessoaVendedor}
+                    error={errors.cdpessoavendedor}
+                  />
+                </>
               )}
             </>
           )}
+          <Button
+            title="Iniciar"
+            onPress={handleSubmit(handleFormNewSaleSubmit)}
+          />
         </View>
-        <Button
-          title="Iniciar"
-          onPress={handleSubmit(handleFormNewSaleSubmit)}
-        />
       </Container>
     </TouchableWithoutFeedback>
   );
