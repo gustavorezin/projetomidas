@@ -348,11 +348,11 @@ export function NewSaleBottomSheet() {
               )}
             </>
           )}
-          <Button
-            title="Iniciar"
-            onPress={handleSubmit(handleFormNewSaleSubmit)}
-          />
         </View>
+        <Button
+          title="Iniciar"
+          onPress={handleSubmit(handleFormNewSaleSubmit)}
+        />
       </Container>
     </TouchableWithoutFeedback>
   );

@@ -46,7 +46,7 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
         password,
       });
 
-      console.log(data.token);
+      //console.log(data.token);
 
       if (data.cliente && data.token) {
         setIsLoadingClienteStorageData(true);
